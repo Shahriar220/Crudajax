@@ -1,0 +1,53 @@
+#header{
+	height: 50px;
+	background: #10284e;
+	color: #fff;
+}
+
+#branding h1{
+	color:#fff;
+}
+
+a:link,
+a:visited{
+	color: #10284e;
+}
+div.breadcrumbs{
+	background: #30caa0;
+}
+div.breadcrumbs a{
+	color:#10284e;
+}
+div.breadcrumbs{
+	color:#333;
+}
+#sticky{
+	background: #10284e;
+}
+#content{
+	background: #fff;
+	color: white;
+}
+.content-main caption{
+	background: #10284e
+}
+.module h2, .module caption, .inline-group h2 {
+    margin: 0;
+    padding: 8px;
+    font-weight: 400;
+    font-size: 13px;
+    text-align: left;
+    background: #30caa0;
+    color: #fff;
+}
+bject-tools a:link, .object-tools a:visited {
+    display: block;
+    float: left;
+    padding: 3px 12px;
+    background: #10284e;
+    font-weight: 400;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #fff;
+}
