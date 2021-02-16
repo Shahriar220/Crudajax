@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from .models import CrudUser
+from django.views.generic import ListView
+from django.views.generic import View
 from django.http import JsonResponse
-from django.template.loader import render_to_string
-from django.contrib.auth.models import User
+
+
 def CrudView(request):
     users=CrudUser.objects.all()
     context={
@@ -45,11 +47,10 @@ def UpdateUser(request):
     return JsonResponse(data)
 
 def DeleteUser(request):
-        id1=request.Get.get('id',None)
-        CrudUser.objects.get(id=id1).delete()
-        data={
-            'deleted':True
-        }
-        return JsonResponse(data)
-
+    id1=request.Get.get('id',None)
+    CrudUser.objects.get(id=id1).delete()
+    data={
+        'deleted':True
+    }
+    return JsonResponse(data)
 
