@@ -36,7 +36,7 @@
                         <button class="btn btn-success form-control" onClick="editUser({{user.id}})" data-toggle="modal" data-target="#myModal" ) ">EDIT</button>
               </td>
               <td align="center ">
-                  <button class="btn btn-danger form-control " onClick="deleteUser({{user.id}}) ">DELETE</button>
+                  <button class="btn btn-danger form-control" onClick="deleteUser({{user.id}})">DELETE</button>
               </td>
           </tr>
           {% endfor %}
@@ -48,26 +48,26 @@
     </div>
   </div>
   <!-- Modal -->
-  <div class="modal fade " id="myModal " tabindex="-1 " role="dialog " aria-labelledby="myModalLabel ">
-    <div class="modal-dialog " role="document ">
-      <div class="modal-content ">
-        <div class="modal-header ">
-          <button type="button " class="close " data-dismiss="modal " aria-label="Close "><span aria-hidden="true ">×</span></button>
-          <h4 class="modal-title " id="myModalLabel ">Update User</h4>
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h4 class="modal-title" id="myModalLabel">Update User</h4>
         </div>
-        <form id="updateUser " action=" ">
-        <div class="modal-body ">
-            <input class="form-control " id="form-id " type="hidden " name="formId "/>
-            <label for="name ">Name</label>
-            <input class="form-control " id="form-name " type="text " name="formName "/>
-            <label for="address ">Address</label>
-            <input class="form-control " id="form-address " type="text " name="formAddress "/>
-            <label for="age ">Phone</label>
-            <input class="form-control " id="form-phone " type="number " name="formPhone "/>
+        <form id="updateUser" action="">
+        <div class="modal-body">
+            <input class="form-control" id="form-id" type="hidden" name="formId"/>
+            <label for="name">Name</label>
+            <input class="form-control" id="form-name" type="text" name="formName"/>
+            <label for="address">Address</label>
+            <input class="form-control" id="form-address" type="text" name="formAddress"/>
+            <label for="age">Phone</label>
+            <input class="form-control" id="form-phone" type="number" name="formPhone"/>
         </div>
-        <div class="modal-footer ">
-            <button type="submit " class="btn btn-primary " >Save changes</button>
-            <button type="button " class="btn btn-default " data-dismiss="modal ">Close</button>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
         </form>
       </div>
@@ -77,12 +77,12 @@
 {% block javascript %}
 <script>
   $('form#addUser').submit(function() {
-        var nameInput = $('input[name="name "]').val().trim();
-        var addressInput = $('input[address="address "]').val().trim();
-        var phoneInput = $('input[phone="phone "]').val().trim();
+        var nameInput = $('input[name="name"]').val().trim();
+        var addressInput = $('input[address="address"]').val().trim();
+        var phoneInput = $('input[phone="phone"]').val().trim();
         if (nameInput&&addressInput&&phoneInput) {
             $.ajax({
-                url: '{% url "create " %}',
+                url: '{% url "create" %}',
                 data: {
                     'name': nameInput,
                     'address': addressInput,
@@ -98,7 +98,7 @@
         } else {
             alert("All field must be filled ");
         }
-        $('form#addUser').trigger("reset ");
+        $('form#addUser').trigger("reset");
         return false;
     });
     function appendToUsrTable(user) {
@@ -113,20 +113,20 @@
                             <td align="center">
                                 <button class="btn btn-success form-control" onClick="editUser(${user.id})" data-toggle="modal" data-target="#myModal" ) ">EDIT</button>
             </td>
-            <td align="center ">
-                <button class="btn btn-danger form-control " onClick="deleteUser(${user.id}) ">DELETE</button>
+            <td align="center">
+                <button class="btn btn-danger form-control" onClick="deleteUser(${user.id}) ">DELETE</button>
             </td>
         </tr>
     `);
 }
 $("form#updateUser ").submit(function(){
-        var idInput=$('input[name="formId "]').val().trim();
-        var nameInput = $('input[name="name "]').val().trim();
-        var addressInput = $('input[address="address "]').val().trim();
-        var phoneInput = $('input[phone="phone "]').val().trim();
+        var idInput=$('input[name="formId"]').val().trim();
+        var nameInput = $('input[name="name"]').val().trim();
+        var addressInput = $('input[address="address"]').val().trim();
+        var phoneInput = $('input[phone="phone"]').val().trim();
         if(nameInput&&addressInput&&phoneInput){
             $.ajax({
-                url:'{%url "update " %}',
+                url:'{%url "update" %}',
                 data:{
                     'id':idInput,
                     'name':nameInput,
@@ -143,16 +143,16 @@ $("form#updateUser ").submit(function(){
         }else{
             alert('Fill all fields');
         }
-        $('form#updateUser').trigger("reset ");
+        $('form#updateUser').trigger("reset");
         $('#myModal').modal('hide');
         return false;
 });
 function editUser(id){
     if(id){
-        tr_id="#user- "+id;
-        name=$(tr_id).find(".userName ").text();
-        address=$(tr_id).find(".userAddress ").text();
-        phone=$(tr_id).find(".userPhone ").text()
+        tr_id="#user-" + id;
+        name=$(tr_id).find(".userName").text();
+        address=$(tr_id).find(".userAddress").text();
+        phone=$(tr_id).find(".userPhone").text()
         $('#form-id').val(id);
         $('#form-name').val(name);
         $('#form-address').val(address);
@@ -160,11 +160,11 @@ function editUser(id){
     }
 }
 function updateToUserTable(user){
-    $("#userTable #user- "+user.id).children(".userData ").each(function(){
-        var attr=$(this).attr("name ");
-        if(attr=="name "){
+    $("#userTable #user-" + user.id).children(".userData").each(function(){
+        var attr=$(this).attr("name");
+        if(attr=="name"){
             $(this).text(user.name);
-        }else if(attr=="address "){
+        }else if(attr=="address"){
             $(this).text(user.address)
         }else{
             $(this).text(user.phone)
@@ -175,14 +175,14 @@ function deleteUser(id){
     var action=confirm("Are you sure you want to delete? ")
     if(action!=false){
         $.ajax({
-            url:'{%url "delete "%}',
+            url:'{%url "delete"%}',
             data:{
                 'id':id,
             },
             dataType:'json',
             success:function(data){
                 if(data.deleted){
-                    $("#userTable #user- "+id).remove();
+                    $("#userTable #user-" + id).remove();
                 }
             }
         });
