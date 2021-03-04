@@ -1,9 +1,8 @@
 from django.urls import path
 from . import views
-
 urlpatterns = [
-    path('crud/',views.CrudView,name='crud_ajax'),
-    path('ajax/crud/create/',views.CreateUser,name='create'),
-    path('ajax/crud/update/',views.UpdateUser,name='update'),
-    path('ajax/crud/delete',views.DeleteUser,name='delete'),
+    path('',views.index,name='index'),
+    path('create',views.create,name='create'),
+    path('update',views.update,name='update'),
+    path('delete',views.delete,name='delete'),
 ]

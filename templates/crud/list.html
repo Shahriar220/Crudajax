@@ -3,10 +3,13 @@
     <p></p>
     <br>
 
+    <div class="container">
+    <h1>Django Ajax CRUD</h1>
     <div class="row">
         <div class="col-md-4 ">
             <h3>ADD USER</h3>
-            <form id="addUser" action="">
+            <form id="addUser" method="POST">
+                {%csrf_token%}
                 <div class="form-group">
                     <input class="form-control" type="text" name="name" placeholder="Name" required>
                 </div>
@@ -19,7 +22,7 @@
                 <button class="btn btn-primary form-control" type="submit">SUBMIT</button>
             </form>
         </div>
-        <div class="col-md-8">
+           <div class="col-md-8">
             <h3>USERS</h3>
             <table id="userTable" class="table table-striped">
                 <tr>
@@ -36,7 +39,7 @@
                         <button class="btn btn-success form-control" onClick="editUser({{user.id}})" data-toggle="modal" data-target="#myModal" ) ">EDIT</button>
               </td>
               <td align="center ">
-                  <button class="btn btn-danger form-control" onClick="deleteUser({{user.id}})">DELETE</button>
+                  <button class="btn btn-danger form-control " onClick="deleteUser({{user.id}}) ">DELETE</button>
               </td>
           </tr>
           {% endfor %}
@@ -48,14 +51,15 @@
     </div>
   </div>
   <!-- Modal -->
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
           <h4 class="modal-title" id="myModalLabel">Update User</h4>
         </div>
-        <form id="updateUser" action="">
+        <form id="updateUser" method="">
+            {%csrf_token%} 
         <div class="modal-body">
             <input class="form-control" id="form-id" type="hidden" name="formId"/>
             <label for="name">Name</label>
@@ -73,121 +77,130 @@
       </div>
     </div>
   </div>
-{% endblock %}
+  {%endblock%}
+
 {% block javascript %}
-<script>
-  $('form#addUser').submit(function() {
-        var nameInput = $('input[name="name"]').val().trim();
-        var addressInput = $('input[address="address"]').val().trim();
-        var phoneInput = $('input[phone="phone"]').val().trim();
-        if (nameInput&&addressInput&&phoneInput) {
+<script type="text/javascript">
+$('#addUser').on('submit',function(e){
+            e.preventDefault()
+            var name=$('input[name="name"]').val().trim();
+            var address=$('input[name="address"]').val().trim();
+            var phone=$('input[name="phone"]').val().trim();
+            if(name&&address&&phone){
             $.ajax({
-                url: '{% url "create" %}',
-                data: {
-                    'name': nameInput,
-                    'address': addressInput,
-                    'phone': phoneInput
+                method:'POST',
+                url:'{%url 'create'%}',
+                data:{
+                    'name':name,
+                    'address':address,
+                    'phone':phone,
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
                 },
-                dataType: 'json',
-                success: function(data) {
-                    if (data.user) {
-                        appendToUsrTable(data.user);
-                    }
-                }
-            });
-        } else {
-            alert("All field must be filled ");
-        }
-        $('form#addUser').trigger("reset");
-        return false;
-    });
-    function appendToUsrTable(user) {
-                        $("#userTable> tbody:last-child").append(`
-                        <tr id="user-${user.id}">
-                            <td class="userName" name="name">${user.name}</td>
+                success:function(response){
+                    $("#userTable> tbody:last-child").append(`
+                        <tr id="user-${response.id}">
+                            <td class="userName" name="name">${response.name}</td>
                             '
-                            <td class="userAddress" name="address">${user.address}</td>
+                            <td class="userAddress" name="address">${response.address}</td>
                             '
-                            <td class="userPhone" name="phone">${user.phone}</td>
+                            <td class="userPhone" name="phone">${response.phone}</td>
                             '
                             <td align="center">
-                                <button class="btn btn-success form-control" onClick="editUser(${user.id})" data-toggle="modal" data-target="#myModal" ) ">EDIT</button>
+                                <button class="btn btn-success form-control" onClick="editUser(${response.id})" data-toggle="modal" data-target="#myModal" ) ">EDIT</button>
             </td>
-            <td align="center">
-                <button class="btn btn-danger form-control" onClick="deleteUser(${user.id}) ">DELETE</button>
+            <td align="center ">
+                <button class="btn btn-danger form-control " onClick="deleteUser(${response.id}) ">DELETE</button>
             </td>
         </tr>
     `);
-}
-$("form#updateUser ").submit(function(){
-        var idInput=$('input[name="formId"]').val().trim();
-        var nameInput = $('input[name="name"]').val().trim();
-        var addressInput = $('input[address="address"]').val().trim();
-        var phoneInput = $('input[phone="phone"]').val().trim();
-        if(nameInput&&addressInput&&phoneInput){
+                }
+            })
+        }else {
+            alert("All field must be filled ");
+        }
+        $('form#addUser').trigger("reset ");
+        })
+        $("form#updateUser").submit(function(){
+
+        })
+
+    $("form#updateUser").submit(function() {
+        var idInput = $('input[name="formId"]').val().trim();
+        var nameInput = $('input[name="formName"]').val().trim();
+        var addressInput = $('input[name="formAddress"]').val().trim();
+        var phoneInput = $('input[name="formPhone"]').val().trim();
+
+        if (nameInput && addressInput && phoneInput) {
+            // Create Ajax Call
             $.ajax({
-                url:'{%url "update" %}',
-                data:{
-                    'id':idInput,
-                    'name':nameInput,
-                    'address':addressInput,
-                    'phone':phoneInput
+                method:'POST',
+                url: '{% url "update" %}',
+                data: {
+                    'id': idInput,
+                    'name': nameInput,
+                    'address': addressInput,
+                    'phone': phoneInput,
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
                 },
-                dataType:'json',
-                success:function(data){
+                dataType: 'json',
+                success: function (data) {
+                    
                     if(data.user){
-                        updateToUserTable(data.user)
+                        console.log('data received')
+                        updateToUserTabel(data.user)
                     }
                 }
             });
-        }else{
-            alert('Fill all fields');
+           } else {
+            alert("All fields must have a valid value.");
         }
         $('form#updateUser').trigger("reset");
         $('#myModal').modal('hide');
-        return false;
-});
-function editUser(id){
-    if(id){
-        tr_id="#user-" + id;
-        name=$(tr_id).find(".userName").text();
-        address=$(tr_id).find(".userAddress").text();
-        phone=$(tr_id).find(".userPhone").text()
-        $('#form-id').val(id);
-        $('#form-name').val(name);
-        $('#form-address').val(address);
-        $('#from-phone').val(phone);
-    }
-}
-function updateToUserTable(user){
-    $("#userTable #user-" + user.id).children(".userData").each(function(){
-        var attr=$(this).attr("name");
-        if(attr=="name"){
-            $(this).text(user.name);
-        }else if(attr=="address"){
-            $(this).text(user.address)
-        }else{
-            $(this).text(user.phone)
-        }
     });
-}
-function deleteUser(id){
-    var action=confirm("Are you sure you want to delete? ")
-    if(action!=false){
-        $.ajax({
-            url:'{%url "delete"%}',
-            data:{
-                'id':id,
-            },
-            dataType:'json',
-            success:function(data){
-                if(data.deleted){
-                    $("#userTable #user-" + id).remove();
-                }
-            }
-        });
-    }
+    // Update Django Ajax Call
+function editUser(id) {
+  if (id) {
+    tr_id = "#user-" + id;
+    name = $(tr_id).find(".userName").text();
+    address = $(tr_id).find(".userAddress").text();
+    phone = $(tr_id).find(".userPhone").text();
+    $('#form-id').val(id);
+    $('#form-name').val(name);
+    $('#form-address').val(address);
+    $('#form-phone').val(phone);
+  }
 }
 
+function updateToUserTabel(user){
+    $("#userTable #user-" + user.id).children(".userData").each(function() {
+                        var attr = $(this).attr("name");
+                        if (attr == "name") {
+                            $(this).text(name);
+                        } else if (attr == "address") {
+                          $(this).text(address);
+                        } else {
+                          $(this).text(phone);
+                        }
+                      });
+}
+
+// Delete Django Ajax Call
+function deleteUser(id) {
+  var action = confirm("Are you sure you want to delete this user?");
+  if (action != false) {
+    $.ajax({
+        url: '{% url "delete" %}',
+        data: {
+            'id': id,
+        },
+        dataType: 'json',
+        success: function (data) {
+            if (data.deleted) {
+              $("#userTable #user-" + id).remove();
+            }
+        }
+    });
+  }
+}
 </script>
 {% endblock javascript %}

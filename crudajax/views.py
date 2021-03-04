@@ -1,56 +1,49 @@
 from django.shortcuts import render
 from .models import CrudUser
-from django.views.generic import ListView
-from django.views.generic import View
 from django.http import JsonResponse
+from django.forms.models import model_to_dict
+from django.core import serializers
 
-
-def CrudView(request):
+def index(request):
     users=CrudUser.objects.all()
-    context={
-        'users':users
-    }
-    return render(request,'crud/list.html',context)
+    return render(request,'crud/list.html',{'users':users})
 
-def CreateUser(request):
-    name1=request.GET.get('name',None)
-    address=request.GET.get('address',None)
-    phone=request.GET.get('phone',None)
+def create(request):
+    if request.method=='POST':
+        name=request.POST.get('name')
+        address=request.POST.get('address')
+        phone=request.POST.get('phone')
+        obj=CrudUser.objects.create(
+            name=name,address=address,phone=phone
+        )
+        return JsonResponse(model_to_dict(obj),safe=False)
 
-    obj=CrudUser.objects.create(
-        name=name1,
-        address=address,
-        phone=phone
-    )
-    user={'id':obj.id,'name':obj.name,'address':obj.address,'phone':obj.phone}
-    data={
-        'user':user
-    }
-    return JsonResponse(data)
+def update(request):
+    if request.method=='POST':
+        id1=request.POST.get('id')
+        name=request.POST.get('name')
+        address=request.POST.get('address')
+        phone=request.POST.get('phone')
+            
+        obj=CrudUser.objects.get(id=id1)
+        obj.name=name
+        obj.address=address
+        obj.phone=phone
+        
+        obj.save()
 
-def UpdateUser(request):
-    id1=request.GET.get('id',None)
-    name1=request.GET.get('name',None)
-    address=request.GET.get('address',None)
-    phone=request.GET.get('phone',None)
+        user = {'id':obj.id,'name':obj.name,'address':obj.address,'phone':obj.phone}
 
-    obj=CrudUser.objects.get(id=id1)
-    obj.name=name1,
-    obj.address=address,
-    obj.phone=phone
-    obj.save()
+        data = {
+                'user': user
+            }
+        print(data)
+        return JsonResponse(data)
 
-    user={'id':obj.id,'name':obj.name,'address':obj.address,'phone':obj.phone}
-    data={
-        'user':user
-    }
-    return JsonResponse(data)
-
-def DeleteUser(request):
-    id1=request.Get.get('id',None)
+def delete(request):
+    id1 = request.GET.get('id', None)
     CrudUser.objects.get(id=id1).delete()
-    data={
-        'deleted':True
-    }
+    data = {
+            'deleted': True
+        }
     return JsonResponse(data)
-
