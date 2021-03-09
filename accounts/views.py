@@ -50,7 +50,7 @@ def login(request):
         if user is not None:
             auth.login(request,user)
             messages.success(request,'Logged in')
-            return redirect('crud_ajax')
+            return redirect('index')
         else:
             messages.error(request,'Invalid credentials')
             return redirect('login')
@@ -61,4 +61,4 @@ def logout(request):
     if request.method == 'POST':
         auth.logout(request)
         messages.success(request,'Logged Out successfully')
-        return redirect('crud_ajax')
+        return redirect('index')
